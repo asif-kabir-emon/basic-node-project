@@ -2,19 +2,20 @@ import { Student } from './student.model';
 // import { TStudent } from './student.interface';
 
 const getStudentAllDB = async () => {
-    const result = await Student.find();
+    const result = await Student.find().populate('admissionSemester')
+                    .populate({
+                        path: "academicDepartment",
+                        populate: "academicFaculty",
+                    });
     return result;
 };
 
 const getStudentByIdDB = async (id: string) => {
-    // const request = await Student.findOne({ id: id });
-    const request = await Student.aggregate([
-        {
-            $match: {
-                id: id,
-            },
-        },
-    ]);
+    const request = await Student.findById(id).populate('admissionSemester')
+                    .populate({
+                        path: "academicDepartment",
+                        populate: "academicFaculty",
+                    });;
     return request;
 };
 
