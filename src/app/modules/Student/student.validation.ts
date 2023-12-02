@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const UserNameValidationSchema = z.object({
+const userNameValidationSchema = z.object({
     firstName: z
         .string()
         .regex(/^[A-Z][a-z]+$/)
@@ -14,7 +14,7 @@ const UserNameValidationSchema = z.object({
         .max(20),
 });
 
-const GuardianValidationSchema = z.object({
+const guardianValidationSchema = z.object({
     fatherName: z.string(),
     fatherOccupation: z.string(),
     fatherContactNumber: z.string(),
@@ -24,7 +24,7 @@ const GuardianValidationSchema = z.object({
 });
 
 // Define LocalGuardian schema
-const LocalGuardianValidationSchema = z.object({
+const localGuardianValidationSchema = z.object({
     name: z.string(),
     occupation: z.string(),
     contactNumber: z.string(),
@@ -32,27 +32,29 @@ const LocalGuardianValidationSchema = z.object({
 });
 
 // Define Student schema
-const StudentValidationSchema = z.object({
-    id: z.string(),
-    password: z.string(),
-    name: UserNameValidationSchema,
-    gender: z.enum(['male', 'female', 'other']),
-    dateOfBirth: z.string().optional(),
-    email: z.string().email(),
-    contactNumber: z.string(),
-    emergencyContactNumber: z.string(),
-    bloodGroup: z
-        .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
-        .optional(),
-    presentAddress: z.string(),
-    permanentAddress: z.string(),
-    guardian: GuardianValidationSchema,
-    localGuardian: LocalGuardianValidationSchema,
-    profileImage: z.string().optional(),
-    isActive: z.enum(['active', 'blocked']).default('active'),
-    isDeleted: z.boolean().default(false),
+const createStudentValidationSchema = z.object({
+    body: z.object({
+        password: z.string().min(8).max(20),
+        student: z.object({
+            name: userNameValidationSchema,
+            gender: z.enum(['male', 'female', 'other']),
+            dateOfBirth: z.string().optional(),
+            email: z.string().email(),
+            contactNumber: z.string(),
+            emergencyContactNumber: z.string(),
+            bloodGroup: z
+                .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
+                .optional(),
+            presentAddress: z.string(),
+            permanentAddress: z.string(),
+            guardian: guardianValidationSchema,
+            localGuardian: localGuardianValidationSchema,
+            admissionSemester: z.string(),
+            profileImage: z.string().optional(),
+        })
+    }),
 });
 
-export const ValidationSchema = {
-    StudentValidationSchema,
+export const studentValidations = {
+    createStudentValidationSchema,
 };

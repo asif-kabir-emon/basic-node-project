@@ -8,8 +8,6 @@ import {
     StudentModel,
 } from './student.interface';
 import validator from 'validator';
-import bcrypt from 'bcrypt';
-import config from '../../config';
 
 const UserNameSchema = new Schema<TUserName>({
     firstName: {
@@ -93,13 +91,12 @@ const StudentSchema = new Schema<TStudent, StudentModel>({
     id: {
         type: String,
         required: [true, 'ID is required'],
-        unique: true,
     },
-    password: {
-        type: String,
-        required: [true, 'Password is required'],
-        minLength: [8, 'Password cannot be less than 8 characters'],
-        maxLength: [20, 'Password cannot be more than 20 characters'],
+    user: {
+        type: Schema.Types.ObjectId,
+        required: [true, 'User ID is required'],
+        unique: true,
+        ref: 'User',
     },
     name: {
         type: UserNameSchema,
@@ -115,7 +112,7 @@ const StudentSchema = new Schema<TStudent, StudentModel>({
         },
         required: [true, 'Gender is required'],
     },
-    dateOfBirth: { type: String },
+    dateOfBirth: { type: Date },
     email: {
         type: String,
         unique: true,
@@ -152,19 +149,20 @@ const StudentSchema = new Schema<TStudent, StudentModel>({
         type: GuardianSchema,
         required: [true, 'Guardian is required'],
     },
+    role: {
+        type: String,
+        enum: ['student'],
+        default: 'student',
+    },
     localGuardian: {
         type: LocalGuardianSchema,
         required: [true, 'Local guardian is required'],
     },
     profileImage: { type: String },
-    isActive: {
-        type: String,
-        enum: {
-            values: ['active', 'blocked'],
-            message:
-                "The status field can only be one of the following: 'active', 'blocked'",
-        },
-        default: 'active',
+    admissionSemester: {
+        type: Schema.Types.ObjectId,
+        required: [true, 'Admission semester is required'],
+        ref: 'AcademicSemester',
     },
     isDeleted: {
         type: Boolean,
@@ -179,16 +177,6 @@ const StudentSchema = new Schema<TStudent, StudentModel>({
 
 StudentSchema.virtual('fullName').get(function () {
     return `${this.name.firstName} ${this.name?.middleName} ${this.name.lastName}`;
-});
-
-
-// Pre save middleware hook
-StudentSchema.pre('save', async function (next) {
-    // hashing the password
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const user = this;
-    user.password = await bcrypt.hash(user.password, Number(config.bcrypt_salt_rounds));
-    next();
 });
 
 
@@ -210,27 +198,11 @@ StudentSchema.pre('aggregate', function (next) {
 });
 
 
-// Post save middleware hook
-StudentSchema.post('save', function (doc, next) {
-    doc.password = "";
-    next();
-});
-
-
 
 // creating a custom static method
 StudentSchema.statics.isUserExists = async function (id: string) {
     const existingUser = await Student.findOne({ id: id });
     return existingUser;
-}
-
-
-// creating a custom instance method
-// StudentSchema.methods.isUserExists = async function (id: string) {
-//     const existingUser = await Student.findOne({ id: id });
-//     return existingUser;
-// };
-
-
+};
 
 export const Student = model<TStudent, StudentModel>('Student', StudentSchema);

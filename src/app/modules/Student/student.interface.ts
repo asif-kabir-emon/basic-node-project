@@ -1,4 +1,4 @@
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 export interface TGuardian {
     fatherName: string;
@@ -24,11 +24,12 @@ export interface TLocalGuardian {
 
 export interface TStudent {
     id: string;
-    password: string;
+    user: Types.ObjectId;
     name: TUserName;
     gender: 'male' | 'female' | 'other';
-    dateOfBirth?: string;
+    dateOfBirth?: Date;
     email: string;
+    role: 'student';
     contactNumber: string;
     emergencyContactNumber?: string;
     bloodGroup?: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-';
@@ -36,8 +37,8 @@ export interface TStudent {
     permanentAddress: string;
     guardian: TGuardian;
     localGuardian?: TLocalGuardian;
+    admissionSemester: Types.ObjectId;
     profileImage?: string;
-    isActive: 'active' | 'blocked';
     isDeleted?: boolean;
 }
 
