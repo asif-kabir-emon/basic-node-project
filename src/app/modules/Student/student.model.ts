@@ -8,6 +8,8 @@ import {
     StudentModel,
 } from './student.interface';
 import validator from 'validator';
+import AppError from '../../errors/AppError';
+import httpStatus from 'http-status';
 
 const UserNameSchema = new Schema<TUserName>({
     firstName: {
@@ -199,6 +201,15 @@ StudentSchema.pre('findOne', function (next) {
 StudentSchema.pre('aggregate', function (next) {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     this.pipeline().unshift({ $match: { isDeleted: {$ne: true} } });
+    next();
+});
+
+StudentSchema.pre('findOneAndUpdate', async function (next) {
+    const query = this.getQuery();
+    const isStudentExists = await Student.findOne({ id: query.id, isDeleted: {$ne: true} });
+    if (!isStudentExists) {
+        throw new AppError(httpStatus.NOT_FOUND, 'Student not found');
+    }
     next();
 });
 
