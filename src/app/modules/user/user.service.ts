@@ -4,7 +4,7 @@ import { TUser } from './user.interface';
 import { User } from './user.model';
 import { Student } from '../student/student.model';
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
-import { UserUtils } from './user.utils';
+import { generateStudentId } from './user.utils';
 import { TAcademicSemester } from '../academicSemester/academicSemester.interface';
 import mongoose from 'mongoose';
 import AppError from '../../errors/AppError';
@@ -23,7 +23,7 @@ const createStudentIntoDB = async (payload: TStudent, password: string) => {
     try {
         session.startTransaction();
         //set  generated id
-        userData.id = await UserUtils.generateStudentId(findAcademicSemester as TAcademicSemester);
+        userData.id = await generateStudentId(findAcademicSemester as TAcademicSemester);
 
         // create a user
         const newUser = await User.create([userData], { session });

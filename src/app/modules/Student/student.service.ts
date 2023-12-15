@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import mongoose from 'mongoose';
 import { Student } from './student.model';
 import AppError from '../../errors/AppError';
@@ -5,8 +6,22 @@ import httpStatus from 'http-status';
 import { User } from '../user/user.model';
 import { TStudent } from './student.interface';
 
-const getStudentAllDB = async () => {
-    const result = await Student.find().populate('admissionSemester')
+const getStudentAllDB = async (query: Record<string,unknown>) => {
+    // { email: { $regex : query.searchTerm, $options: i } }
+    // { name.firstName: { $regex : query.searchTerm, $options: i } }
+
+    let searchTerm = '';
+
+    if(query?.searchTerm) {
+        searchTerm = query?.searchTerm as string;
+    }
+
+    const result = await Student.find({
+        $or: ['email', 'name.firstName', 'presentAddress'].map
+        ((field) => ({
+            [field]: { $regex : searchTerm, $options: 'i' },
+        })),
+    }).populate('admissionSemester')
                     .populate({
                         path: "academicDepartment",
                         populate: "academicFaculty",
@@ -44,10 +59,10 @@ const deleteStudentFromDB = async (id: string) => {
         await session.endSession();
 
         return deletedStudent;
-    } catch (err) {
+    } catch (err: any) {
         await session.abortTransaction();
         await session.endSession();
-        throw new Error('Failed to delete student');
+        throw new Error(err);
     }
 };
 
