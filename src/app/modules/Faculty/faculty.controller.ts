@@ -1,8 +1,8 @@
-import { FacultyService } from './faculty.service';
+import { FacultyServices } from './faculty.service';
 import catchAsync from '../../utils/catchAsync';
 
 const getAllFaculties = catchAsync(async (req, res) => {
-    const result = await FacultyService.getFacultyAllDB(req.query);
+    const result = await FacultyServices.getAllFacultiesFromDB(req.query);
     res.status(200).send({
         success: true,
         message: 'Faculties fetched successfully',
@@ -11,8 +11,8 @@ const getAllFaculties = catchAsync(async (req, res) => {
 });
 
 const getFacultyByID = catchAsync(async (req, res) => {
-    const studentId = req.params.studentId;
-    const result = await FacultyService.getFacultyByIdDB(studentId);
+    const id = req.params.id;
+    const result = await FacultyServices.getSingleFacultyFromDB(id);
     res.status(200).send({
         success: true,
         message: 'Faculty fetched successfully',
@@ -21,8 +21,8 @@ const getFacultyByID = catchAsync(async (req, res) => {
 });
 
 const deleteFaculty = catchAsync(async (req, res) => {
-    const studentId = req.params.studentId;
-    const result = await FacultyService.deleteFacultyFromDB(studentId);
+    const id = req.params.id;
+    const result = await FacultyServices.deleteFacultyFromDB(id);
     res.status(200).send({
         success: true,
         message: 'Faculty deleted successfully',
@@ -31,9 +31,9 @@ const deleteFaculty = catchAsync(async (req, res) => {
 });
 
 const updateFaculty = catchAsync(async (req, res) => {
-    const studentId = req.params.studentId;
+    const id = req.params.id;
     const studentData = req.body.student;
-    const result = await FacultyService.updateFacultyFromDB(studentId, studentData);
+    const result = await FacultyServices.updateFacultyIntoDB(id, studentData);
     res.status(200).send({
         success: true,
         message: 'Faculty updated successfully',
