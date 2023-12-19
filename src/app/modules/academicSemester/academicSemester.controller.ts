@@ -1,9 +1,11 @@
-import httpStatus from "http-status";
-import catchAsync from "../../utils/catchAsync";
-import { AcademicSemesterServices } from "./academicSemester.service";
+import httpStatus from 'http-status';
+import catchAsync from '../../utils/catchAsync';
+import { AcademicSemesterServices } from './academicSemester.service';
 
 const createAcademicSemester = catchAsync(async (req, res) => {
-    const result = await AcademicSemesterServices.CreateAcademicSemesterIntoDB(req.body);
+    const result = await AcademicSemesterServices.CreateAcademicSemesterIntoDB(
+        req.body,
+    );
     res.status(httpStatus.OK).send({
         success: true,
         message: 'Academic Semester created successfully',
@@ -12,7 +14,8 @@ const createAcademicSemester = catchAsync(async (req, res) => {
 });
 
 const getAllAcademicSemester = catchAsync(async (req, res) => {
-    const result = await AcademicSemesterServices.getAllAcademicSemesterFromDB();
+    const result =
+        await AcademicSemesterServices.getAllAcademicSemesterFromDB();
     res.status(httpStatus.OK).send({
         success: true,
         message: 'Academic Semester fetched successfully',
@@ -21,7 +24,9 @@ const getAllAcademicSemester = catchAsync(async (req, res) => {
 });
 
 const getAcademicSemesterById = catchAsync(async (req, res) => {
-    const result = await AcademicSemesterServices.getAcademicSemesterByIdFromDB(req.params.id);
+    const result = await AcademicSemesterServices.getAcademicSemesterByIdFromDB(
+        req.params.id,
+    );
     res.status(httpStatus.OK).send({
         success: true,
         message: 'Academic Semester fetched successfully',
@@ -30,7 +35,11 @@ const getAcademicSemesterById = catchAsync(async (req, res) => {
 });
 
 const updateAcademicSemesterById = catchAsync(async (req, res) => {
-    const result = await AcademicSemesterServices.updateAcademicSemesterByIdFromDB(req.params.semesterId, req.body);
+    const result =
+        await AcademicSemesterServices.updateAcademicSemesterByIdFromDB(
+            req.params.semesterId,
+            req.body,
+        );
     res.status(httpStatus.OK).send({
         success: true,
         message: 'Academic Semester updated successfully',
@@ -43,4 +52,4 @@ export const AcademicSemesterControllers = {
     getAllAcademicSemester,
     getAcademicSemesterById,
     updateAcademicSemesterById,
-}
+};

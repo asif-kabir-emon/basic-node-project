@@ -5,7 +5,11 @@ import { facultyValidations } from './faculty.validation';
 
 const router = express.Router();
 
-router.patch('/:id', validateRequest(facultyValidations.updateFacultyValidationSchema), FacultyController.updateFaculty);
+router.patch(
+    '/:id',
+    validateRequest(facultyValidations.updateFacultyValidationSchema),
+    FacultyController.updateFaculty,
+);
 router.get('/', FacultyController.getAllFaculties);
 router.get('/:id', FacultyController.getFacultyByID);
 router.delete('/:id', FacultyController.deleteFaculty);

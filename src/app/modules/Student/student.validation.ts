@@ -1,16 +1,10 @@
 import { z } from 'zod';
 
-// ---------- Create Validation Schema ---------- 
+// ---------- Create Validation Schema ----------
 const createUserNameValidationSchema = z.object({
-    firstName: z
-        .string()
-        .min(4)
-        .max(20),
+    firstName: z.string().min(4).max(20),
     middleName: z.string().optional(),
-    lastName: z
-        .string()
-        .min(4)
-        .max(20),
+    lastName: z.string().min(4).max(20),
 });
 
 const createGuardianValidationSchema = z.object({
@@ -50,21 +44,15 @@ const createStudentValidationSchema = z.object({
             admissionSemester: z.string(),
             academicDepartment: z.string(),
             profileImage: z.string().optional(),
-        })
+        }),
     }),
 });
 
-// ---------- Update Validation Schema ---------- 
+// ---------- Update Validation Schema ----------
 const updateUserNameValidationSchema = z.object({
-    firstName: z
-        .string()
-        .min(4)
-        .max(20).optional(),
+    firstName: z.string().min(4).max(20).optional(),
     middleName: z.string().optional(),
-    lastName: z
-        .string()
-        .min(4)
-        .max(20).optional(),
+    lastName: z.string().min(4).max(20).optional(),
 });
 
 const updateGuardianValidationSchema = z.object({
@@ -103,7 +91,7 @@ const updateStudentValidationSchema = z.object({
             admissionSemester: z.string().optional(),
             academicDepartment: z.string().optional(),
             profileImage: z.string().optional().optional(),
-        })
+        }),
     }),
 });
 

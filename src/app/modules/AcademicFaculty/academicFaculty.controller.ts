@@ -1,15 +1,17 @@
-import httpStatus from "http-status";
-import catchAsync from "../../utils/catchAsync";
-import { AcademicFacultyServices } from "./academicFaculty.service";
+import httpStatus from 'http-status';
+import catchAsync from '../../utils/catchAsync';
+import { AcademicFacultyServices } from './academicFaculty.service';
 
 const createAcademicFaculty = catchAsync(async (req, res) => {
-    const result = await AcademicFacultyServices.createAcademicFacultyIntoDB(req.body);
+    const result = await AcademicFacultyServices.createAcademicFacultyIntoDB(
+        req.body,
+    );
     res.status(httpStatus.OK).send({
         success: true,
         message: 'Academic Faculty created successfully',
         data: result,
     });
-})
+});
 
 const getAllAcademicFaculty = catchAsync(async (req, res) => {
     const result = await AcademicFacultyServices.getAllAcademicFacultyFromDB();
@@ -21,7 +23,9 @@ const getAllAcademicFaculty = catchAsync(async (req, res) => {
 });
 
 const getAcademicFacultyById = catchAsync(async (req, res) => {
-    const result = await AcademicFacultyServices.getAcademicFacultyByIdFromDB(req.params.facultyId);
+    const result = await AcademicFacultyServices.getAcademicFacultyByIdFromDB(
+        req.params.facultyId,
+    );
     res.status(httpStatus.OK).send({
         success: true,
         message: 'Academic Faculty fetched successfully',
@@ -30,7 +34,10 @@ const getAcademicFacultyById = catchAsync(async (req, res) => {
 });
 
 const updateAcademicFacultyById = catchAsync(async (req, res) => {
-    const result = await AcademicFacultyServices.updateAcademicFacultyIntoDB(req.params.facultyId, req.body);
+    const result = await AcademicFacultyServices.updateAcademicFacultyIntoDB(
+        req.params.facultyId,
+        req.body,
+    );
     res.status(httpStatus.OK).send({
         success: true,
         message: 'Academic Faculty updated successfully',
@@ -43,4 +50,4 @@ export const AcademicFacultyControllers = {
     getAllAcademicFaculty,
     getAcademicFacultyById,
     updateAcademicFacultyById,
-}
+};

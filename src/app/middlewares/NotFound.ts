@@ -8,8 +8,8 @@ const notFound = (req: Request, res: Response, next: NextFunction) => {
     res.status(httpStatus.NOT_FOUND).send({
         success: false,
         message: 'API not found',
-        error: "",
+        error: '',
     });
-}
+};
 
 export default notFound;

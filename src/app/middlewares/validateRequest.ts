@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from "express";
-import { AnyZodObject } from "zod";
+import { Request, Response, NextFunction } from 'express';
+import { AnyZodObject } from 'zod';
 
 const validateRequest = (schema: AnyZodObject) => {
     return async (req: Request, res: Response, next: NextFunction) => {
@@ -12,6 +12,6 @@ const validateRequest = (schema: AnyZodObject) => {
             next(error);
         }
     };
-}
+};
 
 export default validateRequest;
