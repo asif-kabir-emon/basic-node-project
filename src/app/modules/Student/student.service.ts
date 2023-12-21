@@ -82,6 +82,7 @@ const getStudentAllDB = async (query: Record<string, unknown>) => {
         .fields();
 
     const result = await studentQuery.modelQuery
+        .populate('user')
         .populate('admissionSemester')
         .populate({
             path: 'academicDepartment',
