@@ -1,11 +1,12 @@
 import { v2 as cloudinary } from 'cloudinary';
 import multer from 'multer';
 import fs from 'fs';
+import config from '../config';
 
 cloudinary.config({
-    cloud_name: 'dfmm7im1o',
-    api_key: '876217717238836',
-    api_secret: 'Ds6Ho2N_9hLEJ8x2K4jppn5BKt8',
+    cloud_name: config.cloud_name,
+    api_key: config.cloud_api_key,
+    api_secret: config.cloud_api_secret,
 });
 
 export const sendImageToCloudinary = async (
