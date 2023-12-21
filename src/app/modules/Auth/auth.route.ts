@@ -10,21 +10,32 @@ const router = express.Router();
 router.post(
     '/login',
     validateRequest(authValidation.loginValidationSchema),
-    AuthControllers.loginUser
+    AuthControllers.loginUser,
 );
 
 router.post(
     '/change-password',
     auth(USER_ROLE.admin, USER_ROLE.faculty, USER_ROLE.student),
     validateRequest(authValidation.changePasswordValidationSchema),
-    AuthControllers.changePassword
+    AuthControllers.changePassword,
 );
 
 router.post(
     '/refresh-token',
     validateRequest(authValidation.refreshTokenValidationSchema),
-    AuthControllers.refreshToken
+    AuthControllers.refreshToken,
 );
 
+router.post(
+    '/forget-password',
+    validateRequest(authValidation.forgetPasswordValidationSchema),
+    AuthControllers.forgetPassword,
+);
+
+router.post(
+    '/reset-password',
+    validateRequest(authValidation.resetPasswordValidationSchema),
+    AuthControllers.resetPassword,
+);
 
 export const AuthRoutes = router;

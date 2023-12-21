@@ -10,6 +10,11 @@ const userSchema = new Schema<TUser, UserModel>(
             required: true,
             unique: true,
         },
+        email: {
+            type: String,
+            required: true,
+            unique: true,
+        },
         password: {
             type: String,
             required: true,
@@ -68,16 +73,23 @@ userSchema.post('save', function (doc, next) {
 
 userSchema.statics.isUserExistByCustomId = async function (id: string) {
     return await User.findOne({ id: id }).select('+password');
-}
+};
 
-userSchema.statics.isPasswordMatched = async function (plainTextPassword: string, hashedPassword: string) {
+userSchema.statics.isPasswordMatched = async function (
+    plainTextPassword: string,
+    hashedPassword: string,
+) {
     return await bcrypt.compare(plainTextPassword, hashedPassword);
-}
+};
 
-userSchema.statics.isJWTIssuedBeforePasswordChange = async function (passwordChangeTimeStamp: Date, jwtIssuedTimeStamp: number) {
-    const passwordChangedTime = new Date(passwordChangeTimeStamp).getTime()/1000;
+userSchema.statics.isJWTIssuedBeforePasswordChange = async function (
+    passwordChangeTimeStamp: Date,
+    jwtIssuedTimeStamp: number,
+) {
+    const passwordChangedTime =
+        new Date(passwordChangeTimeStamp).getTime() / 1000;
 
-    return passwordChangedTime > jwtIssuedTimeStamp
-}
+    return passwordChangedTime > jwtIssuedTimeStamp;
+};
 
 export const User = model<TUser, UserModel>('User', userSchema);
