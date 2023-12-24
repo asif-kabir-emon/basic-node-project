@@ -4,7 +4,7 @@ import config from '../config';
 export const sendEmail = async (to: string, html: string) => {
     const transporter = nodemailer.createTransport({
         host: config.smtp_host,
-        port: config.smtp_port,
+        port: Number(config.smtp_port),
         secure: config.NODE_ENV === 'production',
         auth: {
             user: config.smtp_user,
