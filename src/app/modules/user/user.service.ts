@@ -46,10 +46,10 @@ const createStudentIntoDB = async (
         );
 
         const imageName = `${userData.id}${payload?.name?.firstName}`;
-        const { secure_url } = await sendImageToCloudinary(
+        const { secure_url } = (await sendImageToCloudinary(
             imageName,
             file?.path,
-        ) as { secure_url: string };
+        )) as { secure_url: string };
 
         payload.profileImage = secure_url;
 
