@@ -49,7 +49,7 @@ const createStudentIntoDB = async (
         const { secure_url } = await sendImageToCloudinary(
             imageName,
             file?.path,
-        );
+        ) as { secure_url: string };
 
         payload.profileImage = secure_url;
 

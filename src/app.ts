@@ -10,7 +10,7 @@ const app: Application = express();
 // parser
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: ['http://localhost:4000'] }));
+app.use(cors({ origin: ['http://localhost:4000', 'http://localhost:5173'] }));
 
 app.use('/api/v1', router);
 
