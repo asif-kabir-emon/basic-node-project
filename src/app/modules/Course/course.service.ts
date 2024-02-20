@@ -5,8 +5,21 @@ import { TCourse, TCourseFaculty } from './course.interface';
 import { Course, CourseFaculty } from './course.model';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
+import { Faculty } from '../Faculty/faculty.model';
 
 const createCourseIntoDB = async (payload: TCourse) => {
+    if (payload.preRequisiteCourses && payload.preRequisiteCourses.length > 0) {
+        for (const preRequisite of payload.preRequisiteCourses) {
+            const isCourseExists = await Course.findById(preRequisite.course);
+            if (!isCourseExists) {
+                throw new AppError(
+                    httpStatus.BAD_REQUEST,
+                    'Pre Requisite Course Not Found',
+                );
+            }
+        }
+    }
+
     const result = await Course.create(payload);
     return result;
 };
@@ -33,7 +46,6 @@ const getSingleCourseFromDB = async (id: string) => {
 };
 
 const deleteCourseIntoDB = async (id: string) => {
-    console.log(id);
     const result = await Course.findByIdAndUpdate(
         id,
         { isDeleted: true },
@@ -135,22 +147,41 @@ const updateCourseIntoDB = async (id: string, payload: Partial<TCourse>) => {
     } catch (err) {
         await session.abortTransaction();
         await session.endSession();
-        console.log(err);
         throw new AppError(httpStatus.BAD_REQUEST, 'Failed to Update Course');
     }
 };
 
 const assignFacultiesWithCourseIntoDB = async (
     id: string,
-    payload: Partial<TCourseFaculty>,
+    faculties: string[],
 ) => {
-    const result = await CourseFaculty.findByIdAndUpdate(
-        id,
-        {
+    if (faculties && faculties.length > 0) {
+        for (const faculty of faculties) {
+            const isFacultyExists = await Faculty.findById(faculty);
+            if (!isFacultyExists) {
+                throw new AppError(httpStatus.BAD_REQUEST, 'Faculty Not Found');
+            }
+        }
+    }
+
+    const isCourseFacultyExists = await CourseFaculty.findOne({
+        course: id,
+    });
+
+    if (!isCourseFacultyExists) {
+        const result = await CourseFaculty.create({
             course: id,
+            faculties: faculties,
+        });
+        return result;
+    }
+
+    const result = await CourseFaculty.findByIdAndUpdate(
+        isCourseFacultyExists._id,
+        {
             $addToSet: {
                 faculties: {
-                    $each: payload,
+                    $each: faculties,
                 },
             },
         },
@@ -183,6 +214,13 @@ const removeFacultiesWithCourseFromDB = async (
     return result;
 };
 
+const getFacultiesWithCourseFromDB = async (id: string) => {
+    const result = await CourseFaculty.findOne({
+        course: id,
+    }).populate('faculties');
+    return result;
+};
+
 export const CourseServices = {
     createCourseIntoDB,
     getAllCoursesFromDB,
@@ -191,4 +229,5 @@ export const CourseServices = {
     updateCourseIntoDB,
     assignFacultiesWithCourseIntoDB,
     removeFacultiesWithCourseFromDB,
+    getFacultiesWithCourseFromDB,
 };

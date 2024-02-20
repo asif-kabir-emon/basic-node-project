@@ -40,6 +40,7 @@ const courseSchema = new Schema<TCourse>(
             type: Number,
             trim: true,
             required: true,
+            unique: true,
         },
         credits: {
             type: Number,
@@ -71,7 +72,7 @@ const courseFacultySchema = new Schema<TCourseFaculty>(
             {
                 type: Schema.Types.ObjectId,
                 trim: true,
-                ref: 'AcademicFaculty',
+                ref: 'Faculty',
             },
         ],
     },
