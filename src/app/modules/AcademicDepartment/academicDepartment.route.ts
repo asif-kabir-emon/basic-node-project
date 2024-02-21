@@ -9,19 +9,38 @@ const router = express.Router();
 
 router.post(
     '/create-academic-department',
-    auth(USER_ROLE.superAdmin),
+    auth(USER_ROLE.superAdmin, USER_ROLE.admin),
     validateRequest(
         academicDepartmentValidation.createAcademicDepartmentValidationSchema,
     ),
     AcademicDepartmentControllers.createAcademicDepartment,
 );
-router.get('/', AcademicDepartmentControllers.getAllAcademicDepartment);
+
+router.get(
+    '/',
+    auth(
+        USER_ROLE.superAdmin,
+        USER_ROLE.admin,
+        USER_ROLE.faculty,
+        USER_ROLE.student,
+    ),
+    AcademicDepartmentControllers.getAllAcademicDepartment,
+);
+
 router.get(
     '/:departmentId',
+    auth(
+        USER_ROLE.superAdmin,
+        USER_ROLE.admin,
+        USER_ROLE.faculty,
+        USER_ROLE.student,
+    ),
     AcademicDepartmentControllers.getAcademicDepartmentById,
 );
+
 router.patch(
     '/:departmentId',
+    auth(USER_ROLE.superAdmin, USER_ROLE.admin),
     validateRequest(
         academicDepartmentValidation.updateAcademicDepartmentValidationSchema,
     ),
