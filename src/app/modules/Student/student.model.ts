@@ -182,7 +182,7 @@ const StudentSchema = new Schema<TStudent, StudentModel>(
 
 StudentSchema.virtual('fullName').get(function () {
     return `${this?.name?.firstName} ${
-        this?.name?.middleName != undefined ? this?.name?.middleName : ''
+        this?.name?.middleName ? this?.name?.middleName : ''
     } ${this?.name?.lastName}`;
 });
 
